@@ -31,6 +31,7 @@ module.exports = async function userLogin() {
 
 	logger.time('用户登录')
 	await page.click(loginBtn)
+	await page.waitForSelector('input[type=email]')
 	await page.type('input[type=email]', loginInfo.username, {delay: 10})
 	await page.keyboard.press('Enter')
 	await page.type('input[type=password]', loginInfo.password, {delay: 10})
