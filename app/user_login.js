@@ -13,32 +13,30 @@ module.exports = async function userLogin() {
 	page.setViewport({width: 1024, height: 768}); //1290 800
 	await page.setRequestInterceptionEnabled(true);
 	page.on('request', interceptedRequest => {
-		if (interceptedRequest.url.endsWith('.png') || interceptedRequest.url.endsWith('.jpg'))
+		if (
+			interceptedRequest.url.indexOf('.png') !== -1
+			|| interceptedRequest.url.indexOf('.jpg') !== -1
+		)
 			interceptedRequest.abort();
 		else
 			interceptedRequest.continue();
 	});
-	await page.goto('https://www.coursera.org/browse')
-	
+	await page.goto(API.COURSE_HOME)
 	logger.time('打开页面')
 
 	logger.time('加载页面')
 	const loginBtn = ".c-ph-right-nav-button.c-ph-log-in"
-	await page.waitForSelector(loginBtn, { timeout: 3 * 1000 })
+	await page.waitForSelector(loginBtn, { timeout: 60 * 1000 })
 	logger.time('加载页面')
-
 
 	logger.time('用户登录')
 	await page.click(loginBtn)
-	// await page.waitForSelector('input[type=email]', { timeout: 1000 })
-	// await page.type('input[type=email]', loginInfo.username, {delay: 100})
-	// await page.type('input[type=password]', loginInfo.password, {delay: 100})
-	// await page.click('input[data-js=submit]')
-	await page.click('input[type=email]')
-	await page.type(loginInfo.username, {delay: 100})
-	await page.press('Enter')
-	await page.click('input[type=password]')
-	await page.type(loginInfo.password, {delay: 100})
+	await page.type('input[type=email]', loginInfo.username, {delay: 10})
+	await page.keyboard.press('Enter')
+	await page.type('input[type=password]', loginInfo.password, {delay: 10})
 	await page.click('button[data-js=submit]')
+	await page.waitForSelector('.rc-EnrollmentsList')
 	logger.time('用户登录')
+
+	return {browser, page}
 }

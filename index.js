@@ -1,16 +1,14 @@
-
-const userLogin = require('./user_login')
+/**
+* @date 2017-10-27
+*/
+const userLogin = require('./app/user_login')
+const courseItem = require('./app/course_item')
 
 async function run() {
 
-	await userLogin()
+	const { browser, page } = await userLogin()
 
-	// const page2 = await browser.newPage()
-	// await page2.goto(API.COURSE_WEEKS)
-
-
-
-
+	await courseItem(browser, page)
 
 	// browser.close()
 }
